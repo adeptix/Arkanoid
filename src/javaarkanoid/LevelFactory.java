@@ -6,6 +6,7 @@
 package javaarkanoid;
 
 import java.util.ArrayList;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import models.Brick;
 
@@ -14,24 +15,23 @@ import models.Brick;
  * @author Dmitry
  */
 public class LevelFactory {
-    
+
     private final ArrayList<Brick> bricks = new ArrayList<>();
 
-    public void build(Pane parent, int [][] matrix){
-        
-        int rows = matrix.length; 
+    public void build(Pane parent, int[][] matrix) {
+
+        int rows = matrix.length;
         int columns = matrix[0].length;
 
-        double brickWidth = parent.getPrefWidth()/ columns;
+        double brickWidth = parent.getPrefWidth() / columns;
         double brickHeight = brickWidth / 3;
-        
-        double newX = 0,newY = 0;        
-        
-        
-        for (int i = 0; i < rows; i++){
-            for(int j = 0; j < columns; j++){
+
+        double newX = 0, newY = 0;
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
                 Brick brick = new Brick(brickWidth, brickHeight, matrix[i][j]);
-              
+
                 brick.setX(newX);
                 brick.setY(newY);
                 parent.getChildren().add(brick);
@@ -41,14 +41,11 @@ public class LevelFactory {
             newX = 0;
             newY += brickHeight;
         }
-        
-        
+
     }
 
     public ArrayList<Brick> getBricks() {
         return bricks;
     }
-    
-    
-    
+
 }

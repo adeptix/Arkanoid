@@ -8,19 +8,13 @@ package controllers;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javafx.animation.AnimationTimer;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.geometry.Bounds;
-import javafx.geometry.Point2D;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Shape;
 import models.Ball;
 import models.Brick;
 
 public class ProcessController extends AnimationTimer {
 
     private final Ball ball;
-    private final double speed = 20;
+    private final double speed = 15;
     private double angle = Math.PI * 3 / 4;
     private double dX, dY;
     private final double radius;
@@ -34,13 +28,13 @@ public class ProcessController extends AnimationTimer {
     private double ballX, ballY;
 
     private final ArrayList<Brick> bricks;
-    
+    private double end;
+
     private final PlatformController platformController;
-   
 
     public ProcessController(double zoneWidth, double zoneHeight, Ball ball, ArrayList<Brick> bricks, PlatformController platformController) {
         this.platformController = platformController;
-        
+
         this.ball = ball;
         this.bricks = bricks;
         radius = ball.getRadius();
@@ -53,6 +47,8 @@ public class ProcessController extends AnimationTimer {
         maxY = zoneHeight - radius;
         calculatePath();
 
+        calcEnd();
+      
     }
 
     private double checkXBounds(double x) {
@@ -101,78 +97,48 @@ public class ProcessController extends AnimationTimer {
 
         checkCollision();
         ball.moveTo(ballX, ballY);
-        
+
         platformController.movePlatform();
 
     }
 
     private void checkCollision() {
+
         Iterator iterator = bricks.iterator();
-        
-        while(iterator.hasNext()){
-        
+
+        while (iterator.hasNext()) {
+
             Brick brick = (Brick) iterator.next();
-      
 
             double bottom = brick.getY() + brick.getHeight();//y =213
             double left = brick.getX(); //x = 231
             double right = brick.getX() + brick.getWidth(); //x = 12
             double up = brick.getY(); //y =123
-            
-            boolean alreadyDeleted = false;
 
             if (ball.getX() >= brick.getX() - ball.getRadius() && ball.getX() <= brick.getX() + brick.getWidth() + ball.getRadius()) {
                 if (equation(bottom, true)) {
-                    ballY = bottom + radius;
+                   // ballY = bottom + radius;
                     brick.changeColor();
-                  
-                    if(brick.checkDefense()){
-                          if(!alreadyDeleted){
-                        bricks.remove(brick); 
-                    alreadyDeleted = true;}
-                    }else
-                        changeAngle(true);
-                    //stop();
-                    System.out.println("bott");
-                   
+
                 }
                 if (equation(up, true)) {
-                    ballY = up - radius;
+                   // ballY = up - radius;
                     brick.changeColor();
-                     if(!alreadyDeleted){
-                        bricks.remove(brick); 
-                    alreadyDeleted = true;}
-                    System.out.println("top");
-                  //  stop();
-                    
+
                 }
             }
             if (ball.getY() >= brick.getY() - radius && ball.getY() <= brick.getY() + brick.getHeight() + radius) {
                 if (equation(left, false)) {
-                    ballX = left + radius;
+                 //   ballX = left + radius;
                     brick.changeColor();
-                     if(!alreadyDeleted){
-                        bricks.remove(brick); 
-                    alreadyDeleted = true;}
-                   // stop();
-                    System.out.println("left");
-                    
+
                 }
 
                 if (equation(right, false)) {
-                    ballX = right + radius;
-                   // stop();
+                  //  ballX = right + radius;
                     brick.changeColor();
-                   if(!alreadyDeleted){
-                        bricks.remove(brick); 
-                    alreadyDeleted = true;}
-                     System.out.println("right");
-                  //  stop();
-                  
                 }
             }
-            
-            
 
             //ball = (x-ballX)^2 + (y-ballY)^2 = ball.getRadius()^2
             // x^2 - 2*ballX*x + ballX^2 - ball.getRadius()^2 + (y-ballY)^2 = 0
@@ -182,7 +148,7 @@ public class ProcessController extends AnimationTimer {
     }
 
     private boolean equation(double line, boolean findX) {
-        //  System.out.println("ballX " + ballX + " ballY " + ballY);
+
         double D;
         if (findX) {
             D = 2 * ballX * 2 * ballX - 4 * (ballX * ballX - ball.getRadius() * ball.getRadius() + (line - ballY) * (line - ballY));
@@ -244,6 +210,12 @@ public class ProcessController extends AnimationTimer {
 //                }
 //            }
         }
+    }
+
+    private void calcEnd() {
+
+        end = bricks.get(bricks.size() - 1).getY();
+        System.out.println("end " + end);
     }
 
 }

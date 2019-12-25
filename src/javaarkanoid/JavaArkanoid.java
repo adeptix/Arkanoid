@@ -89,9 +89,6 @@ public class JavaArkanoid extends Application {
         canvas.setPrefSize(canvasWidth, canvasHeight);
         root.setBottom(canvas);
 
-        
-        
-
         //Brick brick = new Brick(canvasWidth, canvasHeight, 0);
         //primaryStage.setFullScreen(true);
         //  canvas.getChildren().add(brick);
@@ -106,11 +103,11 @@ public class JavaArkanoid extends Application {
 
         ball = new Ball(canvasWidth, canvasHeight);
         canvas.getChildren().add(ball);
-        
+
         PlatformController pc = new PlatformController(scene, canvas, canvasWidth, canvasHeight);
-        
+
         processController = new ProcessController(canvasWidth, canvasHeight, ball, levelManager.getBricks(), pc);
-        processController.start();
+       // processController.start();
         // ball.setLayoutY(0);
         //  ball.setLayoutX(canvasWidth/2);
 
@@ -125,13 +122,17 @@ public class JavaArkanoid extends Application {
         root.setRight(pauseButton);
 
         pauseButton.setOnAction((event) -> {
-            processController.start();
+            if (isPause) {
+                processController.start();
+                isPause = false;
+            } else {
+                processController.stop();
+                isPause = true;
+            }
+
         });
     }
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
         launch(args);
     }

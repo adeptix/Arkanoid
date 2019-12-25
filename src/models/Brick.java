@@ -38,8 +38,11 @@ public class Brick extends Rectangle {
     }
     
     public void changeColor(){
-        setFill(Color.BLACK);
+        setFill(Color.TRANSPARENT);
+        setStroke(Color.TRANSPARENT);
     }
+    
+ 
     
     public boolean checkDefense(){
         if(defense != 0){
